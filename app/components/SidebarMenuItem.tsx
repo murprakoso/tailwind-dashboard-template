@@ -6,7 +6,13 @@ import { BsChevronRight } from "react-icons/bs";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
-export const SidebarMenuItem = ({ item }: { item: SideNavItem }) => {
+export const SidebarMenuItem = ({
+  item,
+  toggleCollapse,
+}: {
+  item: SideNavItem;
+  toggleCollapse: boolean;
+}) => {
   const linkStyle =
     "flex items-center min-h-[40px] h-full text-[#6e768e] py-2 px-4 hover:text-white rounded-md transition duration-200";
   const ddLinkStyle = linkStyle;
@@ -29,28 +35,39 @@ export const SidebarMenuItem = ({ item }: { item: SideNavItem }) => {
             className={`${ddLinkStyle} ${
               pathName.includes(item.path) ? activeLinkStyle : ""
             }`}
+            onClick={toggleSubMenu}
           >
             {item.icon && item.icon}
-            <span className="ml-3 text-base leading-6 font-semibold">
-              {item.title}
-            </span>
-            <BsChevronRight className="ml-auto stroke-2 text-xs" />
+            {!toggleCollapse && (
+              <>
+                <span className="ml-3 text-base leading-6 font-semibold">
+                  {item.title}
+                </span>
+                <BsChevronRight
+                  className={`${
+                    subMenuOpen ? "rotate-90" : ""
+                  } ml-auto stroke-2 text-xs`}
+                />
+              </>
+            )}
           </a>
-          <div className="bg-[#3a3f48] border-l-4">
-            <div className="grid gap-y-2 px-10 py-3 leading-5">
-              {item.subMenuItems?.map((subItem, idx) => (
-                <Link
-                  href={subItem.path}
-                  key={idx}
-                  className={`${navMenuDropdownItem} ${
-                    subItem.path === pathName ? activeLinkStyle : ""
-                  }`}
-                >
-                  {subItem.title}
-                </Link>
-              ))}
+          {subMenuOpen && !toggleCollapse && (
+            <div className="bg-[#3a3f48] border-l-4">
+              <div className="grid gap-y-2 px-10 py-3 leading-5">
+                {item.subMenuItems?.map((subItem, idx) => (
+                  <Link
+                    href={subItem.path}
+                    key={idx}
+                    className={`${navMenuDropdownItem} ${
+                      subItem.path === pathName ? activeLinkStyle : ""
+                    }`}
+                  >
+                    {subItem.title}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       ) : (
         // Main link to the path
@@ -61,7 +78,9 @@ export const SidebarMenuItem = ({ item }: { item: SideNavItem }) => {
           }`}
         >
           {item.icon && item.icon}
-          <span className="ml-3 leading-6 font-semibold">{item.title}</span>
+          {!toggleCollapse && (
+            <span className="ml-3 leading-6 font-semibold">{item.title}</span>
+          )}
         </Link>
       )}
     </>
