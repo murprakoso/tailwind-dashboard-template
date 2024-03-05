@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Karla } from "next/font/google";
 import "./globals.css";
+import Sidebar from "@/app/components/Sidebar";
+import Header from "@/app/components/Header";
+import PageWrapper from "@/app/components/PageWrapper";
 
-const inter = Inter({ subsets: ["latin"] });
+const karla = Karla({
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
+  subsets: ["latin"],
+  variable: "--font-karla",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,12 +18,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={karla.className}>
+        <div className="flex min-h-screen">
+          <Sidebar></Sidebar>
+          <Header></Header>
+          <PageWrapper>{children}</PageWrapper>
+        </div>
+      </body>
     </html>
   );
 }
